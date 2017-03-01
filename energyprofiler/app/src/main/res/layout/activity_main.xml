@@ -8,12 +8,35 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="assl.cs.usu.edu.energyprofiling.MainActivity">
+    tools:context="assl.cs.usu.edu.energyprofiling.MainActivity"
+    android:scrollbars="horizontal|vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:scrollbars="horizontal|vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="1"
+            android:scrollbars="horizontal|vertical">
+
+        </LinearLayout>
+    </ScrollView>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:text=""
-        android:id="@+id/infoText"
-        android:layout_alignParentEnd="true" />
+        android:text="TextView"
+        android:layout_width="340dp"
+        android:layout_height="0dp"
+        android:id="@+id/InfoText"
+        android:layout_weight="0.54"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:scrollbars="vertical" />
+
 </RelativeLayout>

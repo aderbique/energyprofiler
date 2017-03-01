@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Process;
 import android.os.Debug;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -20,7 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-
+    public ScrollView scrollView;
     public TextView infoTextView;
     private ActivityManager am;
     private int memTotal, pId;
@@ -36,8 +38,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        infoTextView = (TextView) findViewById(R.id.infoText) ;
-
+        infoTextView = (TextView) findViewById(R.id.InfoText) ;
+        infoTextView.setVerticalScrollBarEnabled(true);
+        infoTextView.setMovementMethod(new ScrollingMovementMethod());
 
         try {
             Class<?> powerProfileClazz = Class.forName("com.android.internal.os.PowerProfile");
@@ -57,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
             Method averagePower_nolevel = powerProfileClazz.getMethod("getAveragePower", new Class[]{String.class});
 
             //call method
-            SortMethods();
+            SortMethods(1000);
+
             infoTextView.append("CPU core 1: " + averagePower.invoke(powerProInstance, new Object[]{"cpu.active", 0}).toString() + "\n");
             infoTextView.append("CPU core 2: " + averagePower.invoke(powerProInstance, new Object[]{"cpu.active", 1}).toString() + "\n");
             infoTextView.append("CPU core 3: " + averagePower.invoke(powerProInstance, new Object[]{"cpu.active", 2}).toString() + "\n");
@@ -90,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {e.printStackTrace();}
     }
 
-    private void getCpuTime() {
+    private double getCpuTime() {
         try {
             //CPU time for a specific process
             BufferedReader reader = new BufferedReader(new FileReader("/proc/" + pId + "/stat"));
@@ -102,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
             reader.close();
 
             System.out.println(cputime);
-        }catch (Exception e) {e.printStackTrace();}
+            return cputime;
+        }catch (Exception e) {e.printStackTrace(); return -1;}
     }
 
     private void getCpuFreq() {
@@ -132,25 +137,26 @@ public class MainActivity extends AppCompatActivity {
             cpuFreq = reader.readLine();
             reader.close();
             infoTextView.append("CPU frequency (core 3): " + cpuFreq + "\n");
+            infoTextView.invalidate();
         }catch (Exception e) {e.printStackTrace();}
     }
 
-    public void SortMethods(){
+    public void SortMethods(int arraySize){
 
         Random generator = new Random();
 
-        int[] list = new int[11];
+        int[] list = new int[arraySize];
         for(int i=0; i<list.length; i++)
         {
             list[i] = generator.nextInt(10);
         }
 
-        System.out.println("Original Random array: ");
+        infoTextView.append("Original Random array: " + "\n");
         printArray(list);
 
         bubbleSort(list);
 
-        System.out.println("\nAfter bubble sort: ");
+        infoTextView.append("\nAfter bubble sort: " + "\n");
         printArray(list);}
 
 
